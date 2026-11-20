@@ -4,7 +4,7 @@
 [![Rank](https://make.fun/badge/gta6-cover-art-01/Hagai17/vice-panels/rank.svg)](https://make.fun/bounty/gta6-cover-art-01)
 [![Reward](https://make.fun/badge/gta6-cover-art-01/Hagai17/vice-panels/reward.svg)](https://make.fun/bounty/gta6-cover-art-01)
 
-An offline web app that turns your photos and a caption into GTA 6-style cover art: the multi-panel poster look, a Vice City neon-sunset colour grade, and bold original lettering, exported as a PNG to share. Your photos never leave your machine — the app is plain static files and makes no network request.
+An offline web app that turns your photos and a caption into GTA 6-style cover art: the multi-panel poster look, a Vice City neon-sunset colour grade, and bold original lettering, exported as a PNG to share. Your photos never leave your machine — the app is plain static files and makes no network requests.
 
 ## Run it
 

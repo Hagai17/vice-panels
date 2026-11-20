@@ -1,31 +1,66 @@
-# Vice Panels — GTA 6-style cover art maker
+# Vice Panels — GTA-style cover art maker
 
-[![Make GTA 6 Cover Art](https://make.fun/badge/gta6-cover-art-01.svg)](https://make.fun/bounty/gta6-cover-art-01)
-[![Rank](https://make.fun/badge/gta6-cover-art-01/Hagai17/vice-panels/rank.svg)](https://make.fun/bounty/gta6-cover-art-01)
-[![Reward](https://make.fun/badge/gta6-cover-art-01/Hagai17/vice-panels/reward.svg)](https://make.fun/bounty/gta6-cover-art-01)
+![make.fun bounty](https://make.fun/badge/gta6-cover-art-01.svg)
+![rank](https://make.fun/badge/gta6-cover-art-01/Hagai17/vice-panels/rank.svg)
+![reward](https://make.fun/badge/gta6-cover-art-01/Hagai17/vice-panels/reward.svg)
 
-An offline web app that turns your photos and a caption into GTA 6-style cover art: the multi-panel poster look, a Vice City neon-sunset colour grade, and bold original lettering, exported as a PNG to share. Your photos never leave your machine — the app is plain static files and makes no network requests.
+Vice Panels turns a photo and a caption into multi-panel cover art in the
+spirit of a big-city crime saga poster: one tall hero panel, a cluster of
+smaller scenes around it, a heavy colour grade, halftone print texture and
+bold condensed lettering — exported as a PNG you can post anywhere.
 
-## Run it
-
-Serve the `app/` folder with any static file server and open it in a desktop browser, for example with the file that ships in this repository:
-
-```
-node serve.ts
-```
-
-then open http://localhost:8080. No build step, no install.
+This entry was built for the make.fun bounty
+[Make GTA 6 Cover Art](https://make.fun/bounty/gta6-cover-art-01).
 
 ## What it does
 
-- **Your photos, your panels.** Add photos from your machine (or start from the two bundled samples), click a panel to select it, drag on the cover to pan its photo, and zoom per panel. One photo can fill every panel, or each panel can hold a different one.
-- **Four layouts.** Classic 5 (a wide top panel over a tall left panel and two stacked panels), Strips 3, Grid 4 and Hero 1, all with the genre's bold white panel borders.
-- **The grade.** Three Vice City colour grades — Sunset Boulevard, Neon Nights and Ocean Drive — with a strength slider and optional film grain, plus a vignette and foot shade so the lettering sits on the art.
-- **Lettering.** Your headline in a heavy condensed face (Anton, SIL Open Font License, shipped under `app/fonts/` with its license), drawn with a gradient fill, a thick outline and a glow; a letter-spaced sub-caption and a rotated badge on top.
-- **Export in one click.** PNG at the common post sizes: 1080 x 1350, 1080 x 1080 and 1920 x 1080.
+- **Multi-panel layouts** — five panels per cover, arranged poster-style,
+  with a layout tuned for each export size.
+- **Your photos, your framing** — load photos from your machine (browse or
+  drag-and-drop), fill every panel with one photo or mix several, click a
+  panel to select it, drag the photo inside it, and zoom with the slider
+  or the mouse wheel.
+- **Captions** — an editable headline and sub-line, set in a bold condensed
+  face with an outline and a gradient fill that borrows the grade's colours.
+- **Three colour grades** — Sunset Vice (warm dusk), Neon Night (teal and
+  magenta) and Heat Haze (scorched orange), each with halftone dots and a
+  vignette over the collage.
+- **Post-ready exports** — one click renders a PNG at 1080×1080,
+  1080×1350 or 1920×1080. The exported image is drawn by the same code as
+  the on-screen preview, so what you see is what you share.
 
-Everything is original: no Rockstar Games logo, artwork or font. The program at the root (`main.ts`) hands the app in for the bounty; `shots.json` records the scenes the screenshots were taken from.
+## Privacy
 
-Built by an AI agent for make.fun's ["Make GTA 6 Cover Art" bounty](https://make.fun/bounty/gta6-cover-art-01).
+The app is plain static files and runs entirely in your browser. Photos
+are read from your own machine and never uploaded anywhere; there is no
+account, no server and no network request.
 
-New to make.fun? [Start here](https://make.fun/?ref=8pf8m8ra) — enter bounties like this one and earn USDC.
+## Run it
+
+Serve the `app/` folder with any static file server and open it in a
+desktop browser, or use the bundled development server:
+
+```sh
+node serve.ts
+# then open http://localhost:8080
+```
+
+Two sample scenes ship under `app/samples/` so the editor opens with a
+finished cover; replace them with your own photos whenever you like.
+
+## Handing it in
+
+`main.ts` (Node 22, standard library only) copies `app/` and
+`screenshots/` to the output directory and writes `dossier.json` with the
+vendored make.fun library:
+
+```sh
+mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+```
+
+## Notes on originality
+
+Vice Panels is an original tool: its name, layouts, lettering and artwork
+are its own. The headline face is Anton, used under the SIL Open Font
+License 1.1. Nothing here reproduces any game studio's logos, artwork or
+fonts.

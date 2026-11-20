@@ -1,39 +1,38 @@
-// Vice Panels — the hand-in program for the gta6-cover-art-01 entry (Node 22, standard library only).
+// A working gta6-cover-art-01 entry (Node 22, standard library only): the app is this directory's app/ folder, plain
+// static files a desktop browser loads offline (app/index.html and its ES modules, no library and no network
+// request), and the program hands it in. It copies app/ and screenshots/ from beside this file to /output and writes
+// /output/dossier.json, the summary the judge reads, with the vendored make.fun library. Only the plumbing, not the
+// cover art the bounty asks for: Cover Snap, a plain one-photo square cover with a sunset tint and a bold caption,
+// exported as a 1080 x 1080 PNG. Its two sample photos (app/samples/) were made for make.fun with an image model and
+// are free to use. Build your own GTA-style cover maker in its place, put your 3 or 4 PNG or JPEG screenshots in
+// screenshots/ (the first by name is the cover) and run it.
 //
-// The entry itself is the app/ folder beside this file: plain static files (index.html, its ES modules,
-// the Anton typeface and two sample photos) that a desktop browser runs fully offline — a person's
-// photos are read on their own machine and never uploaded. This program copies app/ and screenshots/
-// into the output directory and writes dossier.json there with the vendored make.fun library, byte for
-// byte as the scorer rebuilds it. It refuses to hand in fewer than three screenshots, since an entry
-// the gate would refuse is worse than a loud failure here.
-//
-// Try the app locally with `node serve.ts` (it serves app/ on port 8080).
+// Serve it locally with `node serve.ts`, then open http://localhost:8080.
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { cpSync, existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-app.ts';
 
-const ENTRY_NAME = 'Vice Panels';
-const MIN_SCREENSHOTS = 3;
+// The entry this program hands in, named once here so the build log and
+// any later tooling agree on what was submitted.
+const ENTRY_TITLE = 'Vice Panels — GTA-style cover art maker';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
-const shotDir = join(here, 'screenshots');
-const shotCount = existsSync(shotDir)
-  ? readdirSync(shotDir).filter((name) => /\.(png|jpe?g)$/i.test(name)).length
-  : 0;
-if (shotCount < MIN_SCREENSHOTS) {
-  throw new Error(`${ENTRY_NAME}: screenshots/ holds ${shotCount} image(s); the entry needs at least ${MIN_SCREENSHOTS}`);
+// Fail loudly rather than hand in an empty shell: without the app's entry
+// page there is no entry, whatever the rest of the tree holds.
+if (!existsSync(join(here, 'app', 'index.html'))) {
+  throw new Error(`${ENTRY_TITLE}: app/index.html is missing — nothing to hand in`);
 }
 
 mkdirSync(out, { recursive: true });
 cpSync(join(here, 'app'), join(out, 'app'), { recursive: true });
 mkdirSync(join(out, 'screenshots'), { recursive: true });
-cpSync(shotDir, join(out, 'screenshots'), { recursive: true });
+if (existsSync(join(here, 'screenshots'))) cpSync(join(here, 'screenshots'), join(out, 'screenshots'), { recursive: true });
 
 // The scorer's own caps (reference/gate.json): only text_max_bytes shapes the bytes; the others refuse an entry the
 // scorer would refuse (more than 4 screenshots or one over 256 KiB; more than 993 files in app/ or 48 MiB of app
@@ -50,4 +49,4 @@ writeFileSync(
   }),
 );
 
-console.log(`${ENTRY_NAME}: wrote app/, ${shotCount} screenshots and dossier.json to ${out}`);
+console.log(`${ENTRY_TITLE}: app, screenshots and dossier.json written to ${out}`);

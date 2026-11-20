@@ -1,79 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vice Panels — multi-panel cover maker</title>
-<link rel="icon" href="data:,">
-<link rel="stylesheet" href="./style.css">
+<title>Vice Panels — GTA-style cover art maker</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="app-header">
-  <h1 class="logo">VICE <span>PANELS</span></h1>
-  <p class="tagline">Your photos, cut into panels and graded in neon sunset. Export a cover as a PNG.</p>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">VICE</span><span class="brand-mark alt">PANELS</span>
+  </div>
+  <p class="tagline">Turn your photos into multi-panel cover art. Everything happens on your machine — nothing is uploaded.</p>
 </header>
-<main class="editor">
-  <section class="stage" id="stageWrap">
-    <canvas id="coverCanvas" width="1080" height="1350" aria-label="The cover preview"></canvas>
-    <p class="stage-hint">Click a panel to select it, then drag on the cover to pan its photo.</p>
+
+<main class="layout">
+  <section class="stage-wrap">
+    <div class="stage-frame">
+      <canvas id="stage" width="880" height="880"></canvas>
+    </div>
+    <p class="hint">Click a panel to select it. Drag inside a panel to reposition its photo, scroll to zoom, arrow keys nudge.</p>
+    <div class="export-row">
+      <div class="size-switch" role="group" aria-label="Export size">
+        <button type="button" data-size="square" class="size-btn is-on">Square 1080×1080</button>
+        <button type="button" data-size="portrait" class="size-btn">Portrait 1080×1350</button>
+        <button type="button" data-size="wide" class="size-btn">Wide 1920×1080</button>
+      </div>
+      <button type="button" id="exportBtn" class="export-btn">Export PNG</button>
+    </div>
   </section>
-  <aside class="controls">
-    <div class="control-group">
+
+  <aside class="panel">
+    <section class="group">
       <h2>Photos</h2>
-      <div id="photoTray" class="photo-tray" aria-label="Your photos"></div>
-      <label class="file-pick">Add your photos
-        <input id="photoInput" type="file" accept="image/*" multiple>
+      <label class="drop" id="dropZone">
+        <input type="file" id="fileInput" accept="image/*" multiple hidden>
+        <span>Drop photos here or click to browse</span>
       </label>
-      <div class="button-row">
-        <button id="samplePierButton" type="button">Pier sample</button>
-        <button id="sampleBoulevardButton" type="button">Boulevard sample</button>
-        <button id="fillAllButton" type="button">Fill all panels</button>
+      <div class="strip" id="photoStrip"></div>
+      <button type="button" id="fillAllBtn" class="ghost-btn">Fill every panel with the picked photo</button>
+    </section>
+
+    <section class="group">
+      <h2>Panel <span id="panelName" class="panel-name">1</span></h2>
+      <label class="row"><span>Zoom</span>
+        <input type="range" id="zoomRange" min="1" max="3" step="0.01" value="1">
+      </label>
+      <div class="btn-row">
+        <button type="button" id="centerBtn" class="ghost-btn">Centre photo</button>
+        <button type="button" id="swapBtn" class="ghost-btn">Next photo in panel</button>
+        <button type="button" id="flipBtn" class="ghost-btn">Flip panel</button>
       </div>
-      <p class="fine-print">Photos are read on this machine and never uploaded. Or drop them onto the cover.</p>
-    </div>
-    <div class="control-group">
-      <h2>Layout</h2>
-      <div id="layoutButtons" class="button-row"></div>
-    </div>
-    <div class="control-group">
-      <h2>Grade</h2>
-      <div id="presetButtons" class="button-row"></div>
-      <label class="slider-label">Grade strength
-        <input id="gradeStrength" type="range" min="0" max="1" step="0.01">
+    </section>
+
+    <section class="group">
+      <h2>Caption</h2>
+      <label class="stack"><span>Headline</span>
+        <input type="text" id="headlineInput" maxlength="26" value="SUNSET HEIST">
       </label>
-      <label class="check-label"><input id="grainToggle" type="checkbox"> Film grain</label>
-    </div>
-    <div class="control-group">
-      <h2>Selected panel</h2>
-      <p id="selectedPanelLabel" class="panel-label">Panel 1</p>
-      <label class="slider-label">Zoom
-        <input id="panelZoom" type="range" min="1" max="3" step="0.01">
+      <label class="stack"><span>Sub-line</span>
+        <input type="text" id="sublineInput" maxlength="40" value="A VICE PANELS ORIGINAL">
       </label>
-      <div class="button-row">
-        <button id="resetPanelButton" type="button">Reset pan &amp; zoom</button>
+    </section>
+
+    <section class="group">
+      <h2>Colour grade</h2>
+      <div class="grade-row" role="group" aria-label="Colour grade">
+        <button type="button" data-grade="sunset" class="grade-btn is-on">Sunset Vice</button>
+        <button type="button" data-grade="neon" class="grade-btn">Neon Night</button>
+        <button type="button" data-grade="heat" class="grade-btn">Heat Haze</button>
       </div>
-    </div>
-    <div class="control-group">
-      <h2>Lettering</h2>
-      <label class="field-label">Headline
-        <input id="captionInput" type="text" maxlength="26" autocomplete="off">
-      </label>
-      <label class="field-label">Sub-caption
-        <input id="subCaptionInput" type="text" maxlength="40" autocomplete="off">
-      </label>
-      <label class="field-label">Badge
-        <input id="badgeInput" type="text" maxlength="18" autocomplete="off">
-      </label>
-      <label class="check-label"><input id="badgeToggle" type="checkbox"> Show badge</label>
-    </div>
-    <div class="control-group">
-      <h2>Export</h2>
-      <div id="sizeButtons" class="button-row"></div>
-      <button id="exportButton" class="export-button" type="button">Export PNG</button>
-      <p id="statusLine" class="status-line" role="status"></p>
-    </div>
+    </section>
   </aside>
 </main>
-<script type="module" src="./src/main.js"></script>
+
+<footer class="foot">Vice Panels is an original fan-made tool. It is not affiliated with any game studio, and your photos never leave this tab.</footer>
+
+<script type="module" src="src/app.js"></script>
 </body>
 </html>
